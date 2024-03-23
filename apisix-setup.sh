@@ -24,11 +24,12 @@ DEFAULT_APISIX_IMAGE_NAME="apache/apisix"
 DEFAULT_APISIX_IMAGE_TAG="3.8.0-debian"
 
 DEFAULT_ETCD_LISTEN_PORT=2379
-DEFAULT_APISIX_PORT=9180
+DEFAULT_APISIX_PORT=9080
 
 DEFAULT_ETCD_NAME="etcd-quickstart"
 DEFAULT_APP_NAME="apisix-quickstart"
 DEFAULT_NET_NAME="apisix-quickstart-net"
+DEFAULT_DASHBOARD_NAME="apisix-dashboard"
 
 usage() {
 	echo "Runs a Docker based Apache APISIX."
@@ -84,6 +85,7 @@ install_apisix() {
 	docker run -d \
 		--name ${DEFAULT_ETCD_NAME} \
 		--network=$DEFAULT_NET_NAME \
+		-p2379:3279 \
 		-e ALLOW_NONE_AUTHENTICATION=yes \
 		-e ETCD_ADVERTISE_CLIENT_URLS=http://${DEFAULT_ETCD_NAME}:${DEFAULT_ETCD_LISTEN_PORT} \
 		${DEFAULT_ETCD_IMAGE_NAME}:${DEFAULT_ETCD_IMAGE_TAG} && echo_pass "etcd is listening on ${DEFAULT_ETCD_NAME}:${DEFAULT_ETCD_LISTEN_PORT}" || {
@@ -144,7 +146,27 @@ destroy_apisix() {
 
 validate_apisix() {
 	local rv=0
-	retry 30 curl "http://localhost:${DEFAULT_APISIX_PORT}/apisix/admin/services" >>/dev/null 2>&1 && echo_pass "APISIX is up" || rv=$?
+	retry 30 curl "http://localhost:${DEFAULT_APISIX_PORT}/apisix/admin/services" --head >>/dev/null 2>&1 && echo_pass "APISIX is up" || rv=$?
+}
+
+install_dashboard() {
+	echo "Destroying existing ${DEFAULT_DASHBOARD_NAME} container, if any."
+	echo ""
+	docker rm -f $DEFAULT_DASHBOARD_NAME >>/dev/null 2>&1
+	sleep 2
+
+	echo "Installing APISIX Dashboard"
+	echo ""
+
+	docker pull apache/apisix-dashboard
+	docker run -d --name $DEFAULT_DASHBOARD_NAME \
+		-p 9002:9002 \
+		apache/apisix-dashboard
+
+	local rv=0
+	retry 30 curl "http://localhost:9002" >>/dev/null 2>&1 && echo_pass "APISIX Dashboard is up" || rv=$?
+
+	echo ""
 }
 
 main() {
@@ -161,6 +183,14 @@ main() {
 	destroy_apisix
 
 	install_apisix || {
+		exit 1
+	}
+
+	validate_apisix || {
+		exit 1
+	}
+
+	install_dashboard || {
 		exit 1
 	}
 
