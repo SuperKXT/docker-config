@@ -1,7 +1,7 @@
 local token = os.getenv("APISIX_TOKEN")
 
 if not token then
-  ngx.log(ngx.ERR, "APISIX_TOKEN environment variable not found")
+  ngx.log(ngx.ERR, "env APISIX_TOKEN not found")
   ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
 end
 

@@ -1,9 +1,10 @@
-function()
-	local core = require "apisix.core"
-	local token = os.getenv("APISIX_TOKEN")
+return function()
+	local core = require \"apisix.core\";
+	local token = os.getenv(\"APISIX_TOKEN\");
 	if not token then
-		ngx.log(ngx.ERR, "env APISIX_TOKEN not found")
-		ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
+		ngx.status = 500;
+		ngx.say('{ \"error\": \"env_missing\", \"error_description\": \"env APISIX_TOKEN not found\" }');
+       	ngx.exit(ngx.HTTP_OK);
 	end
-	core.ctx.register_var("apisix-token", token);
+	core.ctx.register_var(\"apisix-token\", token);
 end
