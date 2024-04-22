@@ -23,14 +23,11 @@
       "max_age": 5
     },
     "proxy-rewrite": {
-      "headers": {
-        "apisix-token": "$apisix_token"
-      },
       "regex_uri": ["^/pack-and-ship/(.*)$", "/$1"]
     },
     "serverless-pre-function": {
       "functions": [
-        "return function() local core = require \"apisix.core\"; local token = os.getenv(\"APISIX_TOKEN\"); if not token then ngx.status = 500; ngx.say('{ \"error\": \"env_missing\", \"error_description\": \"env APISIX_TOKEN not found\" }'); ngx.exit(ngx.HTTP_OK); end core.ctx.register_var(\"apisix-token\", token); end"
+        "return function() local core = require \"apisix.core\"; local token = os.getenv(\"APISIX_TOKEN\"); if not token then ngx.status = 500; ngx.say('{ \"error\": \"env_missing\", \"error_description\": \"env APISIX_TOKEN not found\" }'); ngx.exit(ngx.HTTP_OK); end core.request.set_header(\"apisix-token\", token); end"
       ],
       "phase": "before_proxy"
     }
