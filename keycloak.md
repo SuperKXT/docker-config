@@ -30,6 +30,7 @@ GO
 ```bash
 docker run \
 	-p 8080:8080 \
+	--features="token-exchange" \
 	-e KEYCLOAK_ADMIN=admin \
 	-e KEYCLOAK_ADMIN_PASSWORD=admin \
 	-e KC_DB=mssql \
