@@ -42,5 +42,5 @@ docker run \
 	-e KC_DB_SCHEMA=auth \
 	-e KC_TRANSACTION_XA_ENABLED=false \
 	quay.io/keycloak/keycloak:latest start-dev \
-	--features=token-exchange
+	--features=token-exchange,admin-fine-grained-authz
 ```

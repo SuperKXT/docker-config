@@ -4,6 +4,7 @@ services:
     container_name: keycloak
     features:
       - token-exchange
+      - admin-fine-grained-authz
     environment:
       KC_DB: mssql
       KC_DB_URL_HOST: 10.0.0.9
