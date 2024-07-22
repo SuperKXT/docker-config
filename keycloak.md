@@ -30,7 +30,6 @@ GO
 ```bash
 docker run \
 	-p 8080:8080 \
-	--features="token-exchange" \
 	-e KEYCLOAK_ADMIN=admin \
 	-e KEYCLOAK_ADMIN_PASSWORD=admin \
 	-e KC_DB=mssql \
@@ -42,5 +41,6 @@ docker run \
 	-e KC_DB_URL_PROPERTIES=";trustServerCertificate=true;encrypted=false" \
 	-e KC_DB_SCHEMA=auth \
 	-e KC_TRANSACTION_XA_ENABLED=false \
-	quay.io/keycloak/keycloak:latest start-dev
+	quay.io/keycloak/keycloak:latest start-dev \
+	--features=token-exchange
 ```
