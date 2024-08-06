@@ -1,12 +1,17 @@
-uri: /pack-and-ship/*
-name: packing-shipping-backend
+uri: /${{PREFIX}}/*
+name: ${{NAME}}
 plugins:
   authz-keycloak:
     _meta:
       disable: false
+      filter:
+        - - request_uri
+          - "!"
+          - ~~
+          - ^/[^/]*/ping$
     client_id: apisix
-    client_secret: PwgfJTIYC1kbLTKZBLDjvJ9l7p3LwwW7
-    discovery: http://10.0.0.8:8080/realms/wimetrix/.well-known/uma2-configuration
+    client_secret: ${{CLIENT_SECRET}}
+    discovery: http://${{KEYCLOAK_IP:PORT}}/realms/wimetrix/.well-known/uma2-configuration
     lazy_load_paths: true
   cors:
     _meta:
@@ -19,21 +24,21 @@ plugins:
     max_age: 5
   proxy-rewrite:
     regex_uri:
-      - ^/pack-and-ship/(.*)$
+      - ^/[^/]*/(.*)$
       - /$1
   serverless-pre-function:
     functions:
-      - >-
-        return function() local core = require "apisix.core"; local token =
-        "test"; if not token then ngx.status = 500; ngx.say('{ "error":
-        "env_missing", "error_description": "env APISIX_TOKEN not found" }');
-        ngx.exit(ngx.HTTP_OK); end core.request.set_header("x-apisix-token",
-        token); end
+      - |-
+        return function()
+          local core = require "apisix.core";
+          local token = "token";
+          core.request.set_header("x-apisix-token", token);
+        end
     phase: before_proxy
 upstream:
   nodes:
-    - host: 10.0.0.42
-      port: 5006
+    - host: ${{UPSTREAM_IP}}
+      port: ${{UPSTREAM_PORT}}
       weight: 1
   type: roundrobin
 status: 1
