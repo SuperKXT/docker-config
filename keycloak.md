@@ -1,3 +1,30 @@
+## If the database already has an existing auth schema:
+
+```sql
+USE [ActiveSooperWizerNCL];
+GO
+
+ALTER AUTHORIZATION ON SCHEMA::auth TO dbo;
+GO
+
+DROP USER keycloak;
+GO
+
+CREATE USER keycloak FOR LOGIN keycloak;
+GO
+
+ALTER ROLE db_owner ADD MEMBER keycloak;
+GO
+
+ALTER USER keycloak WITH DEFAULT_SCHEMA = auth;
+GO
+
+SELECT SCHEMA_NAME() EXECUTE AS USER='keycloak';
+GO
+```
+
+## If the database does not have an existing auth schema:
+
 ```sql
 USE master;
 GO
