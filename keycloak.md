@@ -1,4 +1,4 @@
-## If the database already has an existing auth schema:
+## If the database already has an existing auth schema
 
 ```sql
 USE [ActiveSooperWizerNCL];
@@ -23,7 +23,7 @@ SELECT SCHEMA_NAME() EXECUTE AS USER='keycloak';
 GO
 ```
 
-## If the database does not have an existing auth schema:
+## If the database does not have an existing auth schema
 
 ```sql
 USE master;
@@ -55,21 +55,5 @@ GO
 ```
 
 ```bash
-docker run \
-	-d \
-	--name keycloak \
-	-p 8080:8080 \
-	-e KEYCLOAK_ADMIN=admin \
-	-e KEYCLOAK_ADMIN_PASSWORD=admin \
-	-e KC_DB=mssql \
-	-e KC_DB_URL_HOST=10.0.0.9 \
-	-e KC_DB_URL_PORT=1435 \
-	-e KC_DB_URL_DATABASE=ActiveSooperWizerNCL \
-	-e KC_DB_USERNAME=keycloak \
-	-e KC_DB_PASSWORD=spts@3311 \
-	-e KC_DB_URL_PROPERTIES=";trustServerCertificate=true;encrypted=false" \
-	-e KC_DB_SCHEMA=auth \
-	-e KC_TRANSACTION_XA_ENABLED=false \
-	quay.io/keycloak/keycloak:latest start-dev \
-	--features=token-exchange,admin-fine-grained-authz
+docker compose -f keycloak.yaml up -d
 ```
