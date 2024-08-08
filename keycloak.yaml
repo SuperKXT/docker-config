@@ -1,19 +1,20 @@
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0.1
+    image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
-    features:
-      - token-exchange
-      - admin-fine-grained-authz
+    ports:
+      - "8080:8080"
     environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
       KC_DB: mssql
       KC_DB_URL_HOST: 10.0.0.9
       KC_DB_URL_PORT: 1435
       KC_DB_URL_DATABASE: ActiveSooperWizerNCL
-      KC_DB_USERNAME: sa
+      KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: spts@3311
-
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    ports:
-      - 8080:8080
+      KC_DB_URL_PROPERTIES: ";trustServerCertificate=true;encrypted=false"
+      KC_DB_SCHEMA: auth
+      KC_TRANSACTION_XA_ENABLED: "false"
+    command: start-dev --features=token-exchange,admin-fine-grained-authz
+    restart: unless-stopped
