@@ -26,9 +26,9 @@ DEFAULT_APISIX_IMAGE_TAG="3.8.0-debian"
 DEFAULT_ETCD_LISTEN_PORT=2379
 DEFAULT_APISIX_PORT=9080
 
-DEFAULT_ETCD_NAME="etcd-quickstart"
-DEFAULT_APP_NAME="apisix-quickstart"
-DEFAULT_NET_NAME="apisix-quickstart-net"
+DEFAULT_ETCD_NAME="etcd"
+DEFAULT_APP_NAME="apisix"
+DEFAULT_NET_NAME="apisix-net"
 DEFAULT_DASHBOARD_NAME="apisix-dashboard"
 
 usage() {
