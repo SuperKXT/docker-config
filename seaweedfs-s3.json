@@ -1,6 +1,10 @@
 {
   "identities": [
     {
+      "name": "anonymous",
+      "actions": ["Read"]
+    },
+    {
       "name": "local",
       "credentials": [
         {
@@ -8,11 +12,7 @@
           "secretKey": "local_secret_key"
         }
       ],
-      "actions": [
-        "Admin",
-        "Read",
-        "Write"
-      ]
+      "actions": ["Admin", "Read", "Write"]
     }
   ]
 }
