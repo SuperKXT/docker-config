@@ -1,1 +1,1 @@
-Moved to `https://github.com/WiMetrixDev/sooperwizer`
+Moved to https://github.com/WiMetrixDev/sooperwizer
